@@ -17,23 +17,28 @@ class Voo{
     string origem;
     string destino;
     float distancia;
-    Aeronave aviao;
+    Aeronave *aviao;
     Horario tempo;
     int numeroEscalas;
     float tempodeVoo;
-    Piloto comandante;
-    Piloto copiloto;
+    Piloto *comandante;
+    Piloto *copiloto;
     vector <Passageiro*> passageiros;
 
 public:
     Voo(int = 0,string = "",string = "",float = 0.0,Aeronave = Aeronave(),Horario = Horario(),int = 0,float = 0,Piloto = Piloto(),Piloto = Piloto());
     ~Voo();
+    void setCod(int);
+    void setEscalas(int);
+    void setOrigem(string);
+    void setDestino(string);
+    void setDistancia(float);
+    void setDuração(float);
     void exibirPilotos();
     void exibirPassageiros();
-    void exibirAeronave();
-    void mostrarVoo();
+    void mostrarVoo(Voo);
     void embarcarPassageiros();
-    void criarVoo();
+    Voo* criarVoo();
 
 };
 

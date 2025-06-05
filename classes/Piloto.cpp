@@ -32,8 +32,23 @@ float Piloto::getHorasdevoo(){
     return horasdevoo;
 }
 
-void Piloto::criarPiloto(){
-
+Piloto* Piloto::criarPiloto(){
+    int mat;
+    string nome, breve;
+    float tempo;
+    long cpf;
+    Piloto *tmp;
+    cin >> nome;
+    tmp->setNome(nome);
+    cin >> cpf;
+    tmp->setCpf(cpf); 
+    cin >> breve;
+    tmp->setBreve(breve);
+    cin >> mat;
+    tmp->setMatricula(mat);
+    cin >> tempo;
+    tmp->setHorasdevoo(tempo); 
+    return tmp;
 }
 
 void Piloto::exibePiloto(){

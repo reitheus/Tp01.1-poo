@@ -8,8 +8,22 @@ Aeronave::Aeronave(string codigo,string modelo,int cap,float velocidade,float au
     this->autonomia = autonomia;
 }
 
-void Aeronave::criaAeronave(){
-
+Aeronave* Aeronave::criaAeronave(){
+    string codigo, modelo;
+    int capacidade;
+    float velocidadeMedia, autonomia;
+    Aeronave *tmp = new Aeronave();
+    cin >> codigo;
+    tmp->setCodigo(codigo);
+    cin >> modelo;
+    tmp->setModelo(modelo);
+    cin >> capacidade;
+    tmp->setCapacidade(capacidade);
+    cin >> velocidadeMedia;
+    tmp->setVelocidadeM(velocidadeMedia);
+    cin >> autonomia;
+    tmp->setAutonomia(autonomia);
+    return tmp;
 }
 
 void Aeronave::setCodigo(string cod){
@@ -50,4 +64,8 @@ float Aeronave::getVelocidadeMedia(){
 
 float Aeronave::getAutonomia(){
     return autonomia;
+}
+
+void Aeronave::mostrarAeronave(){
+    cout << codigo << modelo << capacidade << autonomia << velocidadeMedia;
 }

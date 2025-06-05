@@ -16,7 +16,6 @@ class Aeronave
 
 public:
     Aeronave(string = " ", string = " ", int = 0, float = 0, float = 0);
-    void criaAeronave();
     void setCodigo(string);
     void setModelo(string);
     void setCapacidade(int);
@@ -27,6 +26,8 @@ public:
     int getCapacidade();
     float getVelocidadeMedia();
     float getAutonomia();
+    Aeronave* criaAeronave();
+    void mostrarAeronave();
 
 };
 

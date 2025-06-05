@@ -16,7 +16,7 @@ public:
     void setNumvoo(int num);
     string getNumbilhete();
     int getNumvoo();
-    void criarPassagiro();
+    Passageiro* criarPassagiro();
 };
 
 #endif

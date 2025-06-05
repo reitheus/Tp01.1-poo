@@ -22,6 +22,19 @@ string Passageiro::getNumbilhete(){
 int Passageiro::getNumvoo(){
     return numeroVoos;
 }
-void Passageiro::criarPassagiro(){
 
+Passageiro* Passageiro::criarPassagiro(){
+    string nome, bilhete;
+    int numVoo; 
+    long cpf;
+    Passageiro *tmp;
+    cin >> nome;
+    tmp->setNome(nome);
+    cin >> cpf;
+    tmp->setCpf(cpf);
+    cin >> bilhete;
+    tmp->setNumbilhete(bilhete);
+    cin >> numVoo;
+    tmp->setNumvoo(numVoo);
+    return tmp;
 }

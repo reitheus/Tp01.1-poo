@@ -20,7 +20,7 @@ public:
     int getMatricula();
     string getBreve();
     float getHorasdevoo();
-    void criarPiloto();
+    Piloto* criarPiloto();
     void exibePiloto();
 };
 
