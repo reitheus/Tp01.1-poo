@@ -1,0 +1,27 @@
+#ifndef PILOTO_H
+#define PILOTO_H
+
+#include "Pessoa.h"
+
+#pragma once
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Piloto : public Pessoa{
+    int matricula;
+    string breve;
+    float horasdevoo;
+public:
+    Piloto(int = 0, string = " ", float = 0.0, string = " ", long = 0);
+    void setMatricula(int);
+    void setBreve(string);
+    void setHorasdevoo(float);
+    int getMatricula();
+    string getBreve();
+    float getHorasdevoo();
+    void criarPiloto();
+    void exibePiloto();
+};
+
+#endif
