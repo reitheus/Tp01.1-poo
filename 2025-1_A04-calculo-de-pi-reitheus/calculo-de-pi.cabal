@@ -1,0 +1,45 @@
+cabal-version:      3.0
+name:               calculo-de-pi
+version:            0.1.0.0
+synopsis:           Cálculo aproximado de Pi usando a série de Leibniz.
+description:        Um programa interativo que solicita ao usuário o número de termos
+                    a serem usados no somatório da série de Gregory-Leibniz para
+                    calcular um valor aproximado de Pi.
+license:            MIT
+license-file:       LICENSE
+author:             Prof. José Romildo Malaquias
+maintainer:         malaquias@ufop.edu.br
+category:           Console Application, Learning
+build-type:         Simple
+extra-source-files: README.md, LICENSE
+
+common common-deps
+    build-depends:    base >= 4.7 && < 5
+                    , text
+    default-language: Haskell2010
+    ghc-options:      -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+
+library
+    import:           common-deps
+    exposed-modules:  CalculoPi
+    hs-source-dirs:   src
+
+executable calculo-de-pi
+    import:           common-deps
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    build-depends:    calculo-de-pi
+
+test-suite tests
+    import:           common-deps
+    default-language: Haskell2010
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          MainSpec.hs
+    other-modules:    Run
+    build-depends:    calculo-de-pi
+                    , hspec
+                    , QuickCheck
+                    , ieee754
+                    , process
+                    , temporary

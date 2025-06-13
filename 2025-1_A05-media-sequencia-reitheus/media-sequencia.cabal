@@ -1,0 +1,42 @@
+cabal-version:      3.0
+name:               media-sequencia
+version:            0.1.0.0
+synopsis:           Calcula a média de uma sequência de n números.
+description:        Um programa interativo que lê um número N, depois lê N números de ponto flutuante, e calcula a média aritmética.
+license:            MIT
+license-file:       LICENSE
+author:             Prof. José Romildo Malaquias
+maintainer:         malaquias@ufop.edu.br
+category:           Console Application, Learning
+build-type:         Simple
+extra-source-files: README.md
+
+common common-deps
+    build-depends:    base >= 4.7 && < 5
+                    , text
+    default-language: Haskell2010
+    ghc-options:      -Wall -Wcompat
+
+library
+    import:           common-deps
+    exposed-modules:  MediaSequencia
+    hs-source-dirs:   src
+
+executable media-sequencia
+    import:           common-deps
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    build-depends:    media-sequencia
+
+test-suite tests
+    import:           common-deps
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          MainSpec.hs
+    other-modules:    Run
+    build-depends:    media-sequencia
+                    , hspec
+                    , QuickCheck
+                    , ieee754
+                    , process
+                    , temporary
