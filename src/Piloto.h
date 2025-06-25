@@ -13,7 +13,7 @@ class Piloto : public Pessoa{
     string breve;
     float horasdevoo;
 public:
-    Piloto(int = 0, string = " ", float = 0.0, string = " ", long = 0);
+    Piloto(string = "", long = 0, int = 0, string = "", float = 0.0);
     void setMatricula(int);
     void setBreve(string);
     void setHorasdevoo(float);

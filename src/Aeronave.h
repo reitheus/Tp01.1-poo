@@ -26,8 +26,8 @@ public:
     int getCapacidade();
     float getVelocidadeMedia();
     float getAutonomia();
-    Aeronave* criaAeronave();
     void mostrarAeronave();
+    string serializar() const;
 
 };
 

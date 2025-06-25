@@ -41,11 +41,7 @@ public:
     float getDistancia();
     int getEscalas();
     float getDuracao();
-    void exibirPilotos();
-    void exibirPassageiros();
-    void mostrarVoo(Voo);
-    void embarcarPassageiros(Voo* ,Passageiro* );
-    Voo* criarVoo();
+
 
 };
 

@@ -1,6 +1,6 @@
 #include "..\src\Piloto.h"
 
-Piloto::Piloto(int mat, string breve,float tempo,string nome,long cpf){
+Piloto::Piloto(string nome,long cpf,int mat, string breve,float tempo){
     matricula = mat;
     this->breve = breve;
     horasdevoo = tempo;
