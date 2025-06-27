@@ -24,14 +24,13 @@ class Voo{
     Aeronave* aviao;
     Horario* tempo;
     int numeroEscalas;
-    float tempodeVoo;
     Piloto* comandante;
     Piloto* copiloto;
     vector <Passageiro* > passageiros;
 
 public:
     // Construtor
-    Voo(int  = 0, string  = " ", string  = " ", float  = 0.0,int  = 0,Aeronave* = new Aeronave(), Horario* = new Horario(), float  = 0.0,Piloto* = new Piloto(), Piloto* = new Piloto());
+    Voo(int  = 0, string  = " ", string  = " ", float  = 0.0,int  = 0,Aeronave* = new Aeronave(), Horario* = new Horario(),int = 0,Piloto* = new Piloto(), Piloto* = new Piloto());
     
     ~Voo();
 

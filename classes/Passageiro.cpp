@@ -1,10 +1,10 @@
 #include "..\src\Passageiro.h"
 
-Passageiro::Passageiro(string bilhete,int numVoo, string nome,long long cpf){
-    numeroBilhete = bilhete;
-    numeroVoos = numVoo;
+Passageiro::Passageiro(string nome,long long cpf, string bilhete,int numVoo){
     setNome(nome);
     setCpf(cpf);
+    numeroBilhete = bilhete;
+    numeroVoos = numVoo;
 }
 
 Passageiro::~Passageiro(){
@@ -28,38 +28,66 @@ int Passageiro::getNumvoo() const{
 }
 
 string Passageiro::serializar() const {
-    return getNome() + "," + to_string(getCpf()) + "," + numeroBilhete + "," + to_string(numeroVoos) + "," + "Passageiro";
+
+    return getNome() + "," + to_string(getCpf()) + "," + getNumbilhete() + "," + to_string(getNumvoo()) + "," + "Passageiro";
 }
 
-void Passageiro::salvarPassageirosCSV(const vector<Passageiro*>& passageiros, const string& caminho) {
-    fstream arquivo(caminho, ios::out | ios::in | ios::ate); // Abre o arquivo em modo append
+void Passageiro::salvarPassageirosCSV(vector<Passageiro*> passageiros, string caminho) {
+    // Ler todas as linhas existentes
+    ifstream arquivoLeitura(caminho);
+    vector<string> linhas;
     string linha;
+    while (getline(arquivoLeitura, linha)) {
+        linhas.push_back(linha);
+    }
+    arquivoLeitura.close();
 
-    while(getline(arquivo, linha)) {
-        auto partes = split(linha, ',');
-        if(partes.size() <= 4 && partes[4] == "Passageiro") {
-            // Se já existir, atualizar o passageiro
-            long long cpf = stoll(partes[1]);
-            for (auto p : passageiros) {
-                if (p->getCpf() == cpf) {
-                    // Se já existir, atualizar o passageiro
-
-                    arquivo << p->serializar() << "\n"; // Atualiza a linha do passageiro
-                    arquivo.flush(); // Garante que as alterações sejam salvas
-                    arquivo.close();
-                    return; // Não salvar se já existir
+    // Atualizar ou adicionar passageiros
+    for (auto p : passageiros) {
+        if (p) {
+            bool existe = false;
+            for (size_t i = 0; i < linhas.size(); ++i) {
+                auto partes = split(linhas[i], ',');
+                // Verifica se é Passageiro e compara pelo número do bilhete
+                if (partes.size() >= 5 && partes[4] == "Passageiro" && partes[0] == p->getNumbilhete()) {
+                    linhas[i] = p->serializar();
+                    existe = true;
+                    break;
                 }
+            }
+            if (!existe) {
+                linhas.push_back(p->serializar());
             }
         }
     }
-    for (auto p : passageiros) {
-        arquivo << p->serializar() << "\n";
+
+    // Remover duplicatas de bilhetes
+    unordered_set<string> bilhetesUnicos;
+    vector<string> linhasFiltradas;
+    for (auto it = linhas.rbegin(); it != linhas.rend(); ++it) {
+        auto partes = split(*it, ',');
+        if (partes.size() >= 1) {
+            if (bilhetesUnicos.find(partes[0]) == bilhetesUnicos.end()) {
+                linhasFiltradas.push_back(*it);
+                bilhetesUnicos.insert(partes[0]);
+            }
+        }
     }
-    arquivo.flush(); // Garante que as alterações sejam salvas
-    arquivo.close();
+    reverse(linhasFiltradas.begin(), linhasFiltradas.end());
+
+    // Escrever tudo de volta
+    ofstream arquivoEscrita(caminho, ios::trunc);
+    if (!arquivoEscrita.is_open()) {
+        cerr << "Erro ao abrir o arquivo para salvar os passageiros." << endl;
+        return;
+    }
+    for (const auto& l : linhasFiltradas) {
+        arquivoEscrita << l << "\n";
+    }
+    arquivoEscrita.close();
 }
 
-vector<Passageiro*> Passageiro::carregarPassageirosCSV(const string& caminho) {
+vector<Passageiro*> Passageiro::carregarPassageirosCSV(string caminho) {
     vector<Passageiro*> passageiros;
     ifstream arquivo(caminho);
     string linha;
@@ -67,20 +95,20 @@ vector<Passageiro*> Passageiro::carregarPassageirosCSV(const string& caminho) {
     while (getline(arquivo, linha)) {
         auto partes = split(linha, ',');
 
-        if (partes.size() >= 4 && partes[4] == "Passageiro") {
-            string bilhete = partes[2];
-            long long cpf = stoll(partes[1]);
+        if (partes[4] == "Passageiro") {
             string nome = partes[0];
+            long long cpf = stoll(partes[1]);
+            string bilhete = partes[2];
             int numVoo = stoi(partes[3]);
 
-            passageiros.push_back(new Passageiro(bilhete, numVoo, nome, cpf));
+            passageiros.push_back(new Passageiro(nome, cpf, bilhete, numVoo));
         }
     }
 
     return passageiros;
 }
 
-Passageiro* Passageiro::encontrarPassageiroPorBilhete(const vector<Passageiro*> passageiros, const string& bilhete) {
+Passageiro* Passageiro::encontrarPassageiroPorBilhete(vector<Passageiro*> passageiros, string bilhete) {
     for (const auto& p : passageiros) {
         if (p->getNumbilhete() == bilhete) {
             return p;

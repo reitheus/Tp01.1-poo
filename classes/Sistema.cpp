@@ -1,30 +1,37 @@
 #include "../src/Sistema.h"
 
+// Construtor: inicializa o objeto Sistema e carrega os dados do sistema
 Sistema::Sistema() {
     // Carrega os dados ao iniciar o sistema
     carregarDados();
 }
 
+// Destrutor padrão
 Sistema::~Sistema() {
-
+    // Liberação de recursos, se necessário
 }
 
+// Define o vetor de aeronaves
 void Sistema::setAeronaves(const vector<Aeronave*>& a) {
     aeronaves = a;
 }
 
+// Define o vetor de voos
 void Sistema::setVoos(const vector<Voo*>& v) {
     voos = v;
 }
 
+// Define o vetor de passageiros
 void Sistema::setPassageiros(const vector<Passageiro*>& p) {
     passag = p;
 }
 
+// Define o vetor de pilotos
 void Sistema::setPilotos(const vector<Piloto*>& pi) {
     pilot = pi;
 }
 
+// Função para cadastrar uma nova aeronave
 void Sistema::cadastrarAeronave(){
     string codigo, modelo;
     int capacidade;
@@ -58,6 +65,7 @@ void Sistema::cadastrarAeronave(){
 
 }
 
+// Função para cadastrar um novo piloto
 void Sistema::cadastrarPiloto() {
     string nome, breve;
     long long cpf;
@@ -83,12 +91,22 @@ void Sistema::cadastrarPiloto() {
     
     cout << "Digite a matrícula do piloto: ";
     cin >> matricula;
+    if (matricula <= 0 || cin.fail()) {
+        cout << "Matrícula inválida. Deve ser um número positivo." << endl;
+        system("pause");
+        return;
+    }
     
     cout << "Digite a breve do piloto: ";
     cin >> breve;
     
     cout << "Digite as horas de voo do piloto: ";
     cin >> horasDeVoo;
+    if (horasDeVoo < 0 || cin.fail()) {
+        cout << "Horas de voo inválidas. Deve ser um número não negativo." << endl;
+        system("pause");
+        return;
+    }
 
 
     for(Piloto* p : pilot) {
@@ -111,34 +129,43 @@ void Sistema::cadastrarPiloto() {
 
 }
 
+// Função para cadastrar um novo passageiro
 void Sistema::cadastrarPassageiro() {
     string nome, bilhete;
     long long cpf;
+    Passageiro tmp;
 
     limparTela();
     cout << "Cadastro de Passageiro" << endl;
 
     cout << "Digite o nome do passageiro: ";
-    getline(cin, nome);
-    
+    cin >> nome;
+
     cout << "Digite o CPF do passageiro: ";
     cin >> cpf;
+    try{
+        tmp.verificarCpf(cpf);
+    }catch (const invalid_argument& e) {
+        cerr << "Erro ao verificar CPF: " << e.what() << endl;
+        system("pause");
+        return; // Pula este cadastro se houver erro no CPF
+    }
     
     cout << "Digite o bilhete do passageiro: ";
     cin >> bilhete;
 
     for(Passageiro* p : passag) {
-        if (p->getNumbilhete() == bilhete) {
-            cout << "Já existe um passageiro com este bilhete." << endl;
+        if(p->getCpf() == cpf){
+            cout << "Já existe um passageiro com este CPF." << endl;
             return;
         }
-        if (p->getCpf() == cpf) {
-            cout << "Já existe um passageiro com este CPF." << endl;
+        if(p->getNumbilhete() == bilhete){
+            cout << "Já existe um passageiro com este bilhete." << endl;
             return;
         }
     }
 
-    Passageiro* novoPassageiro = new Passageiro(nome,0 , bilhete, cpf);
+    Passageiro* novoPassageiro = new Passageiro(nome, cpf, bilhete, 0);
     passag.push_back(novoPassageiro);
 
     cout << "Passageiro cadastrado com sucesso!" << endl;
@@ -146,6 +173,7 @@ void Sistema::cadastrarPassageiro() {
 
 }
 
+// Função para criar um novo voo
 void Sistema::criarVoo() {
     string codigo, origem, destino, codAeronave, matriculaPiloto, matriculaCopiloto, dataSaida, dataChegada;
     float distancia;
@@ -203,7 +231,7 @@ void Sistema::criarVoo() {
     
     piloto->setHorasdevoo(piloto->getHorasdevoo() + hora->getHorachegada());
     copiloto->setHorasdevoo(copiloto->getHorasdevoo() + hora->getHorachegada());
-    Voo* voo = new Voo(stoi(codigo), origem, destino, distancia, escalas,aeronave, hora, hora->getHorachegada(), piloto, copiloto);
+    Voo* voo = new Voo(stoi(codigo), origem, destino, distancia, 0,aeronave, hora,escalas, piloto, copiloto);
     voos.push_back(voo);
 
     cout << "Voo criado com sucesso!" << endl;
@@ -211,6 +239,7 @@ void Sistema::criarVoo() {
 
 }
 
+// Função para embarcar um passageiro em um voo
 void Sistema::embarcarPassageiro() {
     string bilhetePassageiro;
     int codigoVoo;
@@ -218,26 +247,16 @@ void Sistema::embarcarPassageiro() {
     cout << "Embarque de Passageiro" << endl;
     cout << "Código do voo: ";
     cin >> codigoVoo;
-    cout << "Bilhete do passageiro: ";
-    cin >> bilhetePassageiro;
-
+    
     Voo* voo = nullptr;
-    for (Voo* v : voos) {
+    for (auto v : voos) {
         if (v->getCod() == codigoVoo) {
             voo = v;
             break;
         }
     }
-    if (!voo) {
+    if (voo == nullptr) {
         cout << "Voo não encontrado." << endl;
-        system("pause");
-        return;
-    }
-    Passageiro tmp;
-    Passageiro* passageiro = tmp.encontrarPassageiroPorBilhete(passag, bilhetePassageiro);
-
-    if (!passageiro) {
-        cout << "Passageiro não encontrado." << endl;
         system("pause");
         return;
     }
@@ -247,15 +266,28 @@ void Sistema::embarcarPassageiro() {
         system("pause");
         return;
     }
+    
+    cout << "Bilhete do passageiro: ";
+    cin >> bilhetePassageiro;
+
+    Passageiro tmp;
+    Passageiro* passageiro = tmp.encontrarPassageiroPorBilhete(passag, bilhetePassageiro);
+
+    if (passageiro == nullptr) {
+        cout << "Passageiro não encontrado." << endl;
+        system("pause");
+        return;
+    }
 
     voo->adicionarPassageiro(passageiro);
     voo->setLotacao(voo->getLotacao() + 1);
-    passageiro->setNumvoo(codigoVoo);
+    passageiro->setNumvoo(passageiro->getNumvoo() + 1);
     cout << "Passageiro embarcado com sucesso no voo " << codigoVoo << endl;
     system("pause");
 
 }
 
+// Função para listar todos os voos cadastrados
 void Sistema::listarVoos() {
     limparTela();
     cout << "Lista de Voos" << endl;
@@ -277,6 +309,7 @@ void Sistema::listarVoos() {
 
 }
 
+// Função para listar todos os passageiros de um voo
 void Sistema::listarPassageirosDeVoo() {
     limparTela();
     int codigoVoo;
@@ -316,6 +349,7 @@ void Sistema::listarPassageirosDeVoo() {
     system("pause");
 }
 
+// Executa a opção escolhida pelo usuário no menu principal
 void Sistema::executarOpcao(int op){
     switch (op) {
         case 1:
@@ -353,22 +387,16 @@ void Sistema::executarOpcao(int op){
 
 }
 
-void Sistema::salvarEmArquivo(const string& nomeArquivo, const vector<Piloto*>& pilotos,const vector<Passageiro*>& passageiros) {
-    ofstream arquivo(nomeArquivo, ios::out); // Abre o arquivo em modo append
+// Função para salvar os dados dos pilotos e passageiros em arquivo
+void Sistema::salvarEmArquivo(string nomeArquivo, vector<Piloto*> pilotos,vector<Passageiro*> passageiros) {
+    Piloto tmp;
+    Passageiro tmp1;
+    tmp.salvarPilotosCSV(pilotos, nomeArquivo);
+    tmp1.salvarPassageirosCSV(passageiros, nomeArquivo);
 
-    // Escreve os dados dos pilotos e passageiros no arquivo
-    for (const auto& piloto : pilotos) {
-
-        arquivo << piloto->serializar() << "\n";
-    }
-
-    for (const auto& passageiro : passageiros) {
-        arquivo << passageiro->serializar() << "\n";
-    }
-
-    arquivo.close();
 }
 
+// Função para salvar todos os dados do sistema em arquivos
 void Sistema::salvarDados() {
     // Salvar dados em arquivos CSV
     Aeronave tmp;
@@ -381,6 +409,7 @@ void Sistema::salvarDados() {
     cout << "Dados salvos com sucesso!" << endl;
 }
 
+// Função para carregar todos os dados do sistema a partir dos arquivos
 void Sistema::carregarDados() {
     limparTela();
     cout << "Carregando dados..." << endl;
@@ -424,6 +453,7 @@ void Sistema::carregarDados() {
     cout << "Dados carregados com sucesso!" << endl;
 }
 
+// Função para gerar relatórios e estatísticas
 void Sistema::gerarRelatorios() {
     int opcao;
     Relatorios relatorios;

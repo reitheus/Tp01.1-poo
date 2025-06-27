@@ -41,8 +41,8 @@ public:
     void carregarDados();
     void salvarDados();
     void salvarDadosEstatisticas();
-    void salvarEmArquivo(const string& nomeArquivo, const vector<Piloto*>& pilotos, const vector<Passageiro*>& passageiros);
-    
+    void salvarEmArquivo(string nomeArquivo, vector<Piloto*> pilotos, vector<Passageiro*> passageiros);
+
     // Funções auxiliares
     void cadastrarAeronave();
     void cadastrarPiloto();

@@ -1,11 +1,23 @@
 #include "..\src\Relatorios.h"
 
+// Construtor da classe Relatorios, inicializa os membros com os parâmetros recebidos
+Relatorios::Relatorios(int totalVoos, float mediaPassageiros, Aeronave* aeronaveMaisUsada, Passageiro* passageiroFrequente, vector<Voo*> voosCom90Porcento, vector<pair<Aeronave*, float>> distanciaPorAeronave){
+    this->totalVoos = totalVoos;
+    this->mediaPassageiros = mediaPassageiros;
+    this->aeronaveMaisUsada = aeronaveMaisUsada;
+    this->passageiroFrequente = passageiroFrequente;
+    this->voosCom90Porcento = voosCom90Porcento;
+    this->distanciaPorAeronave = distanciaPorAeronave;
+}
+
+// Exibe o total de voos cadastrados
 void Relatorios::relatorioTotalVoos(vector<Voo*> voos) {
     limparTela();
     cout << "Total de voos: " << voos.size() << endl;
     system("pause");
 }
 
+// Calcula e exibe a média de passageiros por voo
 void Relatorios::relatorioMediaPassageiros(vector<Voo*> voos) {
     limparTela();
     if (voos.empty()) {
@@ -20,6 +32,7 @@ void Relatorios::relatorioMediaPassageiros(vector<Voo*> voos) {
     system("pause");
 }
 
+// Identifica e exibe a aeronave mais utilizada nos voos
 void Relatorios::relatorioAeronavesMaisUsadas(vector<Voo*> voos) {
     limparTela();
     if (voos.empty()) {
@@ -40,6 +53,7 @@ void Relatorios::relatorioAeronavesMaisUsadas(vector<Voo*> voos) {
     system("pause");
 }
 
+// Identifica e exibe o passageiro mais frequente entre todos os voos
 void Relatorios::relatorioPassageirosFrequentes(vector<Voo*> voos, vector<Passageiro*> passag) {
     limparTela();
     if (passag.empty()) {
@@ -62,6 +76,7 @@ void Relatorios::relatorioPassageirosFrequentes(vector<Voo*> voos, vector<Passag
     system("pause");
 }
 
+// Exibe os voos que têm 90% ou mais de ocupação
 void Relatorios::relatorioVoosCom90Porcento(vector<Voo*> voos) {
     limparTela();
     if (voos.empty()) {
@@ -76,6 +91,7 @@ void Relatorios::relatorioVoosCom90Porcento(vector<Voo*> voos) {
     system("pause");
 }
 
+// Exibe a distância total percorrida por cada aeronave
 void Relatorios::relatorioDistanciaPorAeronave(vector<Voo*> voos) {
     limparTela();
     if (voos.empty()) {
@@ -92,6 +108,7 @@ void Relatorios::relatorioDistanciaPorAeronave(vector<Voo*> voos) {
     system("pause");
 }
 
+// Calcula a taxa de ocupação de um voo (em porcentagem)
 float Relatorios::taxaoDeOcupacao(Voo* voo) {
     if (voo->getAeronave()->getCapacidade() == 0) {
         return 0.0f; // Evita divisão por zero
@@ -99,6 +116,7 @@ float Relatorios::taxaoDeOcupacao(Voo* voo) {
     return (static_cast<float>(voo->getLotacao()) / voo->getAeronave()->getCapacidade()) * 100.0;
 }
 
+// Salva os dados estatísticos em um arquivo de texto
 void Relatorios::salvarDadosEstatisticas() {
     ofstream arquivo("estatisticas.txt", ios::out | ios::app);
     limparTela();

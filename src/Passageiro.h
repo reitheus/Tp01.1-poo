@@ -2,9 +2,11 @@
 #define PASSAGEIRO_H
 
 #include "Pessoa.h"
-
+#pragma once
 #include <iostream>
 #include <string>
+#include <algorithm>
+#include <unordered_set> 
 using namespace std;
 
 class Passageiro : public Pessoa{
@@ -12,7 +14,7 @@ class Passageiro : public Pessoa{
     int numeroVoos;
 public:
     // Construtor
-    Passageiro(string = " ", int = 0, string = " ", long long = 0);
+    Passageiro(string = " ",long long = 0 , string = " ", int = 0);
     ~Passageiro();
 
     // Setters e Getters
@@ -23,9 +25,9 @@ public:
 
     // Métodos
     virtual string serializar() const;
-    void salvarPassageirosCSV(const vector<Passageiro*>& passageiros, const string& caminho);
-    vector<Passageiro*> carregarPassageirosCSV(const string& caminho);
-    Passageiro* encontrarPassageiroPorBilhete(const vector<Passageiro*> passageiros, const string& bilhete);
+    void salvarPassageirosCSV(vector<Passageiro*> passageiros, string caminho);
+    vector<Passageiro*> carregarPassageirosCSV(string caminho);
+    Passageiro* encontrarPassageiroPorBilhete(vector<Passageiro*> passageiros, string bilhete);
 };
 
 #endif

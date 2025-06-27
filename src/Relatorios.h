@@ -19,6 +19,11 @@ class Relatorios {
     vector<pair<Aeronave*, float>> distanciaPorAeronave;
     
 public:
+
+    // Construtor
+    Relatorios(int = 0,float = 0.0, Aeronave* = nullptr, Passageiro* = nullptr,vector<Voo*> = {}, vector<pair<Aeronave*, float>> = {});
+
+    // Métodos
     void relatorioTotalVoos(vector<Voo*> voos); 
     void relatorioMediaPassageiros(vector<Voo*> voos); 
     void relatorioAeronavesMaisUsadas(vector<Voo*> voos); 

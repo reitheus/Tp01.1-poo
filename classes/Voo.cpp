@@ -1,14 +1,14 @@
 #include "..\src\Voo.h"
 
-Voo::Voo(int cod, string orig, string dest, float dist, int lotacao, Aeronave* aeronave, Horario* hora, float temp, Piloto* piloto, Piloto* copiloto){
+Voo::Voo(int cod, string orig, string dest, float dist, int lotacao, Aeronave* aeronave, Horario* hora,int escala, Piloto* piloto, Piloto* copiloto){
     codigo = cod;
     origem = orig;
     destino = dest;
     distancia = dist;
-    lotacao = lotacao;
+    this->lotacao = lotacao;
     aviao = aeronave;
     tempo = hora;
-    tempodeVoo = temp;
+    numeroEscalas = escala;
     comandante = piloto;
     this->copiloto = copiloto;
 }
@@ -37,10 +37,6 @@ void Voo::setDistancia(float num){
     distancia = num;
 }
 
-void Voo::setDuracao(float num){
-    tempodeVoo = num;
-}
-
 void Voo::setLotacao(int num) {
     lotacao = num;
 }
@@ -65,10 +61,6 @@ int Voo::getEscalas()const{
     return numeroEscalas;
 }
 
-float Voo::getDuracao()const{
-    return tempodeVoo;
-}
-
 int Voo::getLotacao() const {
     return lotacao;
 }
@@ -90,10 +82,11 @@ vector<Passageiro* > Voo::getPassageiros() const {
 }
 
 void Voo::adicionarPassageiro(Passageiro* passageiro) {
-    if (passageiro && passageiros.size() < size_t(lotacao) ){
+    if (passageiro) {
         passageiros.push_back(passageiro);
+        lotacao++;
     } else {
-        cerr << "Não foi possível adicionar o passageiro. Lotação máxima atingida ou passageiro inválido.\n";
+        cerr << "Passageiro inválido." << endl;
     }
 }
 
@@ -125,33 +118,33 @@ vector<Voo* > Voo::carregarVoosCSV(const string& caminho,const vector<Aeronave* 
 
         if (partes.size() >= 11) {
             int codigoVoo = stoi(partes[0]);
-            string origem = partes[1];
-            string destino = partes[2];
-            string codigoAeronave = partes[3];
-            int matriculaPiloto = stoi(partes[4]);
-            int matriculaCopiloto = stoi(partes[5]);
+            string orig = partes[1];
+            string dest = partes[2];
+            float dist = stof(partes[3]);
+            int lot = stoi(partes[4]);
+            string codigoAeronave = partes[5];
             int dataSaida = stoi(partes[6]);
             int dataChegada = stoi(partes[7]);
-            float distancia = stof(partes[8]);
-            float duracao = stof(partes[9]);
-            int lotacao = stoi(partes[10]);
+            int escalas = stoi(partes[8]);
+            int matriculaPiloto = stoi(partes[9]);
+            int matriculaCopiloto = stoi(partes[10]);
 
             Aeronave* aeronave = tmp.encontrarAeronavePorCodigo(aeronaves, codigoAeronave);
 
             // NOVO: Buscar por matrícula, não por nome
             Piloto* piloto = nullptr;
-            Piloto* copiloto = nullptr;
+            Piloto* piloto2 = nullptr;
 
             for (const auto& p : pilotos) {
                 if (p->getMatricula() == matriculaPiloto) piloto = p;
-                if (p->getMatricula() == matriculaCopiloto) copiloto = p;
+                if (p->getMatricula() == matriculaCopiloto) piloto2 = p;
             }
 
             Horario *tempoAeronave = new Horario();
             tempoAeronave->setHorasaida(dataSaida);
             tempoAeronave->setHorachegada(dataChegada);
             
-            Voo* voo = new Voo(codigoVoo, origem, destino, distancia, lotacao,aeronave, tempoAeronave, duracao, piloto, copiloto);
+            Voo* voo = new Voo(codigoVoo, orig, dest, dist,lot ,aeronave, tempoAeronave, escalas, piloto, piloto2);
 
             for(size_t i = 11; i < partes.size(); ++i) {
                 string bilhete = partes[i];
@@ -177,21 +170,20 @@ vector<Voo* > Voo::carregarVoosCSV(const string& caminho,const vector<Aeronave* 
 
 string Voo::serializar() const {
     stringstream ss;
-    ss << codigo << "," 
+    ss << to_string(codigo) << "," 
        << origem << "," 
        << destino << "," 
+       << to_string(distancia) << "," 
+       << to_string(lotacao) << ","
        << aviao->getCodigo() << "," 
-       << comandante->getMatricula() << "," 
-       << copiloto->getMatricula() << "," 
-       << tempo->getHorasaida() << "," 
-       << tempo->getHorachegada() << "," 
-       << distancia << "," 
-       << tempodeVoo << "," 
-       << lotacao;
-    
-    for (const auto& p : passageiros) {
-        ss << "," << p->getNumbilhete();
+       << to_string(tempo->getHorasaida()) << "," 
+       << to_string(tempo->getHorachegada()) << ","
+       << to_string(numeroEscalas) << ","
+       << to_string(comandante->getMatricula()) << ","
+       << to_string(copiloto->getMatricula());
+
+    for (const auto& passageiro : passageiros) {
+        ss << "," << passageiro->getNumbilhete();
     }
-    
     return ss.str();
 }

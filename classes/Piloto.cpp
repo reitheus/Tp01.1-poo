@@ -70,29 +70,58 @@ vector<Piloto*> Piloto::carregarPilotosCSV(const string& caminho) {
 }
 
 void Piloto::salvarPilotosCSV(const vector<Piloto*>& pilotos, const string& caminho) {
-    fstream arquivo(caminho, ios::out | ios::in | ios::ate);
+    // Ler todas as linhas existentes
+    ifstream arquivoLeitura(caminho);
+    vector<string> linhas;
     string linha;
-    //verificar se o piloto ja existe
-    while(getline(arquivo, linha)) {
-        auto partes = split(linha, ',');
-        if (partes.size() >= 5 && partes[5] == "Piloto") {
-            int matricula = stoi(partes[2]);
-            for (const auto& piloto : pilotos) {
-                if (piloto->getMatricula() == matricula) {
-                    // Se já existir, atualizar o piloto
+    while (getline(arquivoLeitura, linha)) {
+        linhas.push_back(linha);
+    }
+    arquivoLeitura.close();
 
-                    arquivo << piloto->serializar() << "\n"; // Atualiza a linha do piloto
-                    arquivo.close();
-                    return; //atualiza o piloto se já existir
+    // Atualizar ou adicionar pilotos
+    for (auto p : pilotos) {
+        if (p) {
+            bool existe = false;
+            for (size_t i = 0; i < linhas.size(); ++i) {
+                auto partes = split(linhas[i], ',');
+                // Verifica se é Piloto e compara pela matrícula
+                if (partes.size() >= 6 && partes[5] == "Piloto" && partes[2] == to_string(p->getMatricula())) {
+                    linhas[i] = p->serializar();
+                    existe = true;
+                    break;
                 }
+            }
+            if (!existe) {
+                linhas.push_back(p->serializar());
             }
         }
     }
-    // Se não existir, salvar os pilotos
-    for (const auto& piloto : pilotos) {
-        arquivo << piloto->serializar() << "\n";
+
+    // Remover duplicatas de matrícula
+    unordered_set<string> matriculasUnicas;
+    vector<string> linhasFiltradas;
+    for (auto it = linhas.rbegin(); it != linhas.rend(); ++it) {
+        auto partes = split(*it, ',');
+        if (partes.size() >= 3) {
+            if (matriculasUnicas.find(partes[2]) == matriculasUnicas.end() && partes[5] == "Piloto") {
+                linhasFiltradas.push_back(*it);
+                matriculasUnicas.insert(partes[2]);
+            }
+        }
     }
-    arquivo.close();
+    reverse(linhasFiltradas.begin(), linhasFiltradas.end());
+
+    // Escrever tudo de volta
+    ofstream arquivoEscrita(caminho, ios::trunc);
+    if (!arquivoEscrita.is_open()) {
+        cerr << "Erro ao abrir o arquivo para salvar os pilotos." << endl;
+        return;
+    }
+    for (const auto& l : linhasFiltradas) {
+        arquivoEscrita << l << "\n";
+    }
+    arquivoEscrita.close();
 }
 
 Piloto* Piloto::encontrarPilotoPorMatricula(const vector<Piloto*> pilotos, const int matricula) {
