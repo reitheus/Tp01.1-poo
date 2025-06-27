@@ -4,19 +4,29 @@
 #pragma once
 #include <string>
 #include <iostream>
+#include <vector>
+#include <fstream>
+#include "..\src\Persistencia.h"
 using namespace std;
 
 class Pessoa{
     string nome;
-    long cpf;
+    long long cpf;
 public:
 
-    Pessoa(string = " ", long = 0);
-    void setNome(string );
-    void setCpf(long );
-    string getNome();
-    long getCpf();
+    // Construtor 
+    Pessoa(string = " ", long long = 0);
+    ~Pessoa();
 
+    // Setters e Getters
+    void setNome(string );
+    void setCpf(long long );
+    string getNome() const;
+    long long getCpf() const;
+
+    // Métodos
+    virtual string serializar() const;
+    void verificarCpf(long long cpf);
 };
 
 #endif
