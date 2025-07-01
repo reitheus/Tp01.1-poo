@@ -4,14 +4,11 @@ CFLAGS = -Wall -g
 EXEC = programa
 SRC_DIR =  classes
 
-
-
-SRCS = $(wildcard $(SRC_DIR)/*.c)
-
+SRCS = $(wildcard $(SRC_DIR)/*.cpp)
 
 #regra padrão
 all: $(EXEC)
-	
+
 # Regra de compilação
 $(EXEC): $(SRCS)
 	$(CC) -o $@ $^
