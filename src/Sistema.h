@@ -7,13 +7,13 @@
 #include <string>
 #include <map>
 #include <algorithm>
-#include "..\src\Piloto.h"
-#include "..\src\Passageiro.h"
-#include "..\src\Aeronave.h"
-#include "..\src\Voo.h"
-#include "..\src\Persistencia.h"
-#include "..\src\Pessoa.h"
-#include "..\src\Relatorios.h"
+#include "../src/Piloto.h"
+#include "../src/Passageiro.h"
+#include "../src/Aeronave.h"
+#include "../src/Voo.h"
+#include "../src/Persistencia.h"
+#include "../src/Pessoa.h"
+#include "../src/Relatorios.h"
 using namespace std;
 
 class Sistema {

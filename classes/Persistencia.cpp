@@ -1,4 +1,4 @@
-#include "..\src\Persistencia.h"
+#include "../src/Persistencia.h"
 
 
 void limparTela() {

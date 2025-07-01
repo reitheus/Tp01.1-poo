@@ -49,7 +49,8 @@ void Sistema::cadastrarAeronave(){
     }
 
     cout << "Digite o modelo da aeronave: ";
-    cin >> modelo;
+    getline(cin, modelo);
+    cin.ignore();  
     cout << "Digite a capacidade da aeronave: ";
     cin >> capacidade;
     cout << "Digite a velocidade média da aeronave: ";
@@ -77,7 +78,8 @@ void Sistema::cadastrarPiloto() {
     cout << "Cadastro de Piloto" << endl;
 
     cout << "Digite o nome do piloto: ";
-    cin >> nome;
+    cin.ignore();
+    getline(cin, nome);
     
     cout << "Digite o CPF do piloto: ";
     cin >> cpf;
@@ -139,7 +141,8 @@ void Sistema::cadastrarPassageiro() {
     cout << "Cadastro de Passageiro" << endl;
 
     cout << "Digite o nome do passageiro: ";
-    cin >> nome;
+    cin.ignore();
+    getline(cin, nome);
 
     cout << "Digite o CPF do passageiro: ";
     cin >> cpf;

@@ -1,4 +1,4 @@
-#include "..\src\Aeronave.h"
+#include "../src/Aeronave.h"
 
 Aeronave::Aeronave(string codigo,string modelo,int cap,float velocidade,float autonomia){
     this->codigo = codigo;

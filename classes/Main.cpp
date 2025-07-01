@@ -1,4 +1,4 @@
-#include "..\src\Sistema.h"
+#include "../src/Sistema.h"
 
 
 int main(){

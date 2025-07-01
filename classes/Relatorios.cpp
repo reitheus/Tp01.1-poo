@@ -1,4 +1,4 @@
-#include "..\src\Relatorios.h"
+#include "../src/Relatorios.h"
 
 // Construtor da classe Relatorios, inicializa os membros com os parâmetros recebidos
 Relatorios::Relatorios(int totalVoos, float mediaPassageiros, Aeronave* aeronaveMaisUsada, Passageiro* passageiroFrequente, vector<Voo*> voosCom90Porcento, vector<pair<Aeronave*, float>> distanciaPorAeronave){

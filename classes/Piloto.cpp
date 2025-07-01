@@ -1,4 +1,4 @@
-#include "..\src\Piloto.h"
+#include "../src/Piloto.h"
 
 Piloto::Piloto(string nome, long long cpf,int mat, string breve,int tempo){
     matricula = mat;

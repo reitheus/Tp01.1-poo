@@ -1,4 +1,4 @@
-#include "..\src\Passageiro.h"
+#include "../src/Passageiro.h"
 
 Passageiro::Passageiro(string nome,long long cpf, string bilhete,int numVoo){
     setNome(nome);

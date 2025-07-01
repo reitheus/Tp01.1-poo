@@ -2,7 +2,7 @@
 #define RELATORIOS_H
 
 #pragma once
-#include "..\src\Sistema.h"
+#include "../src/Sistema.h"
 #include <iostream>
 #include <vector>
 #include <map>

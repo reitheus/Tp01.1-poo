@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
-#include "..\src\Persistencia.h"
+#include "../src/Persistencia.h"
 using namespace std;
 
 class Aeronave{

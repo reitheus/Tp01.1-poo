@@ -1,4 +1,4 @@
-#include "..\src\Voo.h"
+#include "../src/Voo.h"
 
 Voo::Voo(int cod, string orig, string dest, float dist, int lotacao, Aeronave* aeronave, Horario* hora,int escala, Piloto* piloto, Piloto* copiloto){
     codigo = cod;

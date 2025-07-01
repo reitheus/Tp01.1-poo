@@ -1,11 +1,11 @@
 #ifndef VOO_H
 #define VOO_H
 
-#include "..\src\Aeronave.h"
-#include "..\src\Piloto.h"
-#include "..\src\Passageiro.h"
-#include "..\src\Horario.h"
-#include "..\src\Persistencia.h"
+#include "../src/Aeronave.h"
+#include "../src/Piloto.h"
+#include "../src/Passageiro.h"
+#include "../src/Horario.h"
+#include "../src/Persistencia.h"
 
 #pragma once
 #include <iostream>

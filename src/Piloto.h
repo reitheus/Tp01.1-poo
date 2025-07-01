@@ -1,7 +1,7 @@
 #ifndef PILOTO_H
 #define PILOTO_H
 
-#include "..\src\Pessoa.h"
+#include "../src/Pessoa.h"
 
 #pragma once
 #include <iostream>
