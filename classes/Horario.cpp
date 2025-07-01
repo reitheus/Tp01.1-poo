@@ -1,4 +1,4 @@
-#include "..\src\Horario.h"
+#include "../src/Horario.h"
 
 Horario::Horario(int saida,int chegada){
     horaSaida = saida;
