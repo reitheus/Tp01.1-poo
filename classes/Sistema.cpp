@@ -49,8 +49,8 @@ void Sistema::cadastrarAeronave(){
     }
 
     cout << "Digite o modelo da aeronave: ";
-    getline(cin, modelo);
-    cin.ignore();  
+    cin.ignore(); // Limpa o buffer do cin
+    getline(cin, modelo); 
     cout << "Digite a capacidade da aeronave: ";
     cin >> capacidade;
     cout << "Digite a velocidade média da aeronave: ";
@@ -78,7 +78,7 @@ void Sistema::cadastrarPiloto() {
     cout << "Cadastro de Piloto" << endl;
 
     cout << "Digite o nome do piloto: ";
-    cin.ignore();
+    cin.ignore(); // Limpa o buffer do cin
     getline(cin, nome);
     
     cout << "Digite o CPF do piloto: ";
@@ -141,7 +141,7 @@ void Sistema::cadastrarPassageiro() {
     cout << "Cadastro de Passageiro" << endl;
 
     cout << "Digite o nome do passageiro: ";
-    cin.ignore();
+    cin.ignore(); // Limpa o buffer do cin
     getline(cin, nome);
 
     cout << "Digite o CPF do passageiro: ";
@@ -192,13 +192,20 @@ void Sistema::criarVoo() {
     getline(cin, origem);
     
     cout << "Digite o destino do voo: ";
+    cin.ignore(); // Limpa o buffer do cin
     getline(cin, destino);
-    
-    cout << "Digite a hora de saída do voo: ";
+
+    cout << "Digite a hora de saída do voo (hh:mm) : ";
+    cin.ignore(); // Limpa o buffer do cin
     getline(cin, dataSaida);
         
     cout << "Digite o código da aeronave: ";
-    getline(cin, codAeronave);
+    cin >> codAeronave;
+    if (codAeronave.empty()) {
+        cout << "Código da aeronave não pode ser vazio." << endl;
+        system("pause");
+        return;
+    }
     
     cout << "Digite a distância do voo: ";
     cin >> distancia;
