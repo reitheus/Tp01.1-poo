@@ -41,10 +41,6 @@ string Piloto::serializar() const {
     return getNome() + "," + to_string(getCpf()) + "," + to_string(matricula) + "," + breve + "," + to_string(horasdevoo) + "," + "Piloto";
 }
 
-void Piloto::exibePiloto(){
-    cout << getNome() << getCpf() << matricula << breve << horasdevoo << endl;
-}
-
 vector<Piloto*> Piloto::carregarPilotosCSV(const string& caminho) {
     vector<Piloto*> pilotos;
     ifstream arquivo(caminho);

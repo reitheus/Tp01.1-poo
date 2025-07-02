@@ -27,7 +27,6 @@ public:
     int getHorasdevoo() const;
 
     // Métodos
-    void exibePiloto();
     void salvarPilotosCSV(const vector<Piloto*>& pilotos, const string& caminho);
     vector<Piloto*> carregarPilotosCSV(const string& caminho);
     virtual string serializar() const;

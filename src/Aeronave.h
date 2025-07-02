@@ -36,7 +36,6 @@ public:
     float getAutonomia()const;
 
     // Métodos
-    void mostrarAeronave();
     virtual string serializar() const;
     void salvarAeronavesCSV(const vector<Aeronave*>& aeronaves, const string& caminho);
     vector<Aeronave*> carregarAeronavesCSV(const string& caminho);

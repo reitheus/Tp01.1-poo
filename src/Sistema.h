@@ -54,6 +54,10 @@ public:
     void embarcarPassageiro();
     void listarVoos();
     void listarPassageirosDeVoo();
+    void listarAeronaves();
+    void listarPilotos();
+    void listarPassageiros();
+    void listarVoos();
     
     //Funções de relatórios
     void gerarRelatorios(); 

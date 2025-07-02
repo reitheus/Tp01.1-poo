@@ -1,9 +1,7 @@
 #include "../src/Sistema.h"
 
-// Construtor: inicializa o objeto Sistema e carrega os dados do sistema
+// Construtor: inicializa o objeto Sistema
 Sistema::Sistema() {
-    // Carrega os dados ao iniciar o sistema
-    carregarDados();
 }
 
 // Destrutor padrão
@@ -40,23 +38,46 @@ void Sistema::cadastrarAeronave(){
     limparTela();
     cout << "Cadastro de Aeronave" << endl;
 
+    // Verifica se já existe uma aeronave com o mesmo código
     cout << "Digite o código da aeronave: ";
     cin >> codigo;
-
     if(tmp.encontrarAeronavePorCodigo(aeronaves, codigo) != nullptr) {
         cout << "Já existe uma aeronave com este código." << endl;
         return;
     }
 
+    // Verifica se o modelo é válido
     cout << "Digite o modelo da aeronave: ";
     cin.ignore(); // Limpa o buffer do cin
     getline(cin, modelo); 
+    if (modelo.empty()) {
+        cout << "Modelo inválido." << endl;
+        system("pause");
+        return;
+    }
+
+    // Verifica se a capacidade, velocidade média e autonomia são válidas
     cout << "Digite a capacidade da aeronave: ";
     cin >> capacidade;
-    cout << "Digite a velocidade média da aeronave: ";
+    if (capacidade <= 0 || cin.fail()) {
+        cout << "Capacidade inválida." << endl;
+        system("pause");
+        return;
+    }
+    cout << "Digite a velocidade média da aeronave em milhas/h: ";
     cin >> velocidadeMedia;
-    cout << "Digite a autonomia da aeronave: ";
+    if (velocidadeMedia <= 0 || cin.fail()) {
+        cout << "Velocidade média inválida. Deve ser um número positivo." << endl;
+        system("pause");
+        return;
+    }
+    cout << "Digite a autonomia da aeronave em milhas: ";
     cin >> autonomia;
+    if (autonomia <= 0 || cin.fail()) {
+        cout << "Autonomia inválida. Deve ser um número positivo." << endl;
+        system("pause");
+        return;
+    }
 
     Aeronave* novaAeronave = new Aeronave(codigo, modelo, capacidade, velocidadeMedia, autonomia);
     aeronaves.push_back(novaAeronave);
@@ -77,11 +98,17 @@ void Sistema::cadastrarPiloto() {
     limparTela();
     cout << "Cadastro de Piloto" << endl;
 
+    // Verifica se já existe um piloto com a mesma matrícula ou CPF
     cout << "Digite o nome do piloto: ";
-    cin.ignore(); // Limpa o buffer do cin
     getline(cin, nome);
+    if (nome.empty()) {
+        cout << "Nome inválido." << endl;
+        system("pause");
+        return;
+    }
     
-    cout << "Digite o CPF do piloto: ";
+    // Verifica se o CPF é válido
+    cout << "Digite o CPF do piloto(apenas numeros): ";
     cin >> cpf;
     try {
         tmp.verificarCpf(cpf);
@@ -91,6 +118,7 @@ void Sistema::cadastrarPiloto() {
         return; // Pula este cadastro se houver erro no CPF
     }
     
+    // Verifica se a matrícula é válida
     cout << "Digite a matrícula do piloto: ";
     cin >> matricula;
     if (matricula <= 0 || cin.fail()) {
@@ -99,9 +127,16 @@ void Sistema::cadastrarPiloto() {
         return;
     }
     
+    // Verifica se a breve é válida
     cout << "Digite a breve do piloto: ";
     cin >> breve;
+    if (breve.empty()) {
+        cout << "Breve inválida." << endl;
+        system("pause");
+        return;
+    }
     
+    // Verifica se as horas de voo são válidas
     cout << "Digite as horas de voo do piloto: ";
     cin >> horasDeVoo;
     if (horasDeVoo < 0 || cin.fail()) {
@@ -140,11 +175,17 @@ void Sistema::cadastrarPassageiro() {
     limparTela();
     cout << "Cadastro de Passageiro" << endl;
 
+    // Verifica se o nome é válido
     cout << "Digite o nome do passageiro: ";
-    cin.ignore(); // Limpa o buffer do cin
     getline(cin, nome);
+    if (nome.empty()) {
+        cout << "Nome inválido." << endl;
+        system("pause");
+        return;
+    }
 
-    cout << "Digite o CPF do passageiro: ";
+    // Verifica se o CPF é válido
+    cout << "Digite o CPF do passageiro(apenas numeros): ";
     cin >> cpf;
     try{
         tmp.verificarCpf(cpf);
@@ -154,9 +195,16 @@ void Sistema::cadastrarPassageiro() {
         return; // Pula este cadastro se houver erro no CPF
     }
     
+    // Verifica se o bilhete é válido
     cout << "Digite o bilhete do passageiro: ";
     cin >> bilhete;
+    if (bilhete.empty()) {
+        cout << "Bilhete inválido." << endl;
+        system("pause");
+        return;
+    }
 
+    // Verifica se já existe um passageiro com o mesmo CPF ou bilhete
     for(Passageiro* p : passag) {
         if(p->getCpf() == cpf){
             cout << "Já existe um passageiro com este CPF." << endl;
@@ -184,21 +232,55 @@ void Sistema::criarVoo() {
     limparTela();
     cout << "Criação de Voo" << endl;
 
+    // Verifica se o código do voo é válido
     cout << "Digite o código do voo: ";
     cin >> codigo;
+    if (codigo.empty()) {
+        cout << "Código inválido. Deve ser uma string não vazia." << endl;
+        system("pause");
+        return;
+    }
 
+    // Verifica se a origem e o destino são válidos
     cout << "Digite a origem do voo: ";
     cin.ignore();
     getline(cin, origem);
-    
-    cout << "Digite o destino do voo: ";
-    cin.ignore(); // Limpa o buffer do cin
-    getline(cin, destino);
+    if (origem.empty()) {
+        cout << "Origem inválida." << endl;
+        system("pause");
+        return;
+    }
 
-    cout << "Digite a hora de saída do voo (hh:mm) : ";
-    cin.ignore(); // Limpa o buffer do cin
+    // Verifica se o destino é válido
+    cout << "Digite o destino do voo: ";
+    getline(cin, destino);
+    if (destino.empty()) {
+        cout << "Destino inválido." << endl;
+        system("pause");
+        return;
+    }
+
+    // Verifica se a data de saída é válida
+    cout << "Digite a hora de saída do voo (hh:mm): ";
     getline(cin, dataSaida);
-        
+    Horario* hora = new Horario();
+    try{
+        hora->verificarHora(dataSaida);
+
+    }catch (const invalid_argument& e) {
+        cerr << "Erro ao definir horário: " << e.what() << endl;
+        system("pause");
+        return; // Pula este voo se houver erro no horário
+    }
+
+    // Verifica se a aeronave é válida
+    if(aeronaves.size() < 1) {
+        cout << "Nenhuma aeronave cadastrada. Cadastre uma aeronave primeiro." << endl;
+        system("pause");
+        return;
+    }
+    cout << "Lista de aeronaves disponíveis:" << endl;
+    listarAeronaves();
     cout << "Digite o código da aeronave: ";
     cin >> codAeronave;
     if (codAeronave.empty()) {
@@ -207,14 +289,37 @@ void Sistema::criarVoo() {
         return;
     }
     
-    cout << "Digite a distância do voo: ";
+    // Verifica se a distância do voo é válida
+    cout << "Digite a distância do voo em km: ";
     cin >> distancia;
+    if (distancia <= 0 || cin.fail()) {
+        cout << "Distância inválida. Deve ser um número positivo." << endl;
+        system("pause");
+        return;
+    }
     
+    // Verifica se há pelo menos dois pilotos cadastrados
+    if(pilot.size() < 2){
+        cout << "Não há pilotos suficientes cadastrados. Cadastre pelo menos dois pilotos." << endl;
+        system("pause");
+        return;
+    }
+    // Verifica se o piloto e copiloto são válidos
+    cout << "Lista de pilotos disponíveis:" << endl;
+    listarPilotos();
     cout << "Digite a matrícula do piloto: ";
     cin >> matriculaPiloto;
     
+    cout << "Escolha o copiloto do voo: " << endl;
     cout << "Digite a matrícula do copiloto: ";
+    listarPilotos();
     cin >> matriculaCopiloto;
+    if (matriculaPiloto.empty() || matriculaCopiloto.empty()) {
+        cout << "Matrícula do piloto ou copiloto não pode ser vazia." << endl;
+        system("pause");
+        return;
+    }
+    // Verifica se o piloto e copiloto existem
     Aeronave tmp;
     Piloto tmp1;
     Aeronave* aeronave = tmp.encontrarAeronavePorCodigo(aeronaves, codAeronave);
@@ -225,15 +330,6 @@ void Sistema::criarVoo() {
         cout << "Dados inválidos. Verifique os códigos e matrículas fornecidos." << endl;
         system("pause");
         return;
-    }
-    Horario* hora = new Horario();
-    try{
-        hora->verificarHora(dataSaida);
-
-    }catch (const invalid_argument& e) {
-        cerr << "Erro ao definir horário: " << e.what() << endl;
-        system("pause");
-        return; // Pula este voo se houver erro no horário
     }
 
     hora->calculaDuracao(distancia, aeronave->getVelocidadeMedia(), hora->calcularEscalas(distancia, aeronave->getAutonomia()));
@@ -255,7 +351,9 @@ void Sistema::embarcarPassageiro() {
     int codigoVoo;
     limparTela();
     cout << "Embarque de Passageiro" << endl;
-    cout << "Código do voo: ";
+    cout << "Lista de voos disponíveis:" << endl;
+    listarVoos();
+    cout << "Digite o Código do voo: ";
     cin >> codigoVoo;
     
     Voo* voo = nullptr;
@@ -265,19 +363,23 @@ void Sistema::embarcarPassageiro() {
             break;
         }
     }
+    // Verifica se o voo existe
     if (voo == nullptr) {
         cout << "Voo não encontrado." << endl;
         system("pause");
         return;
     }
-
+    // Verifica se o voo já atingiu a capacidade máxima
     if (voo->getLotacao() >= voo->getAeronave()->getCapacidade()) {
         cout << "Capacidade máxima atingida para o voo " << codigoVoo << endl;
         system("pause");
         return;
     }
     
-    cout << "Bilhete do passageiro: ";
+    // Verifica se há passageiros cadastrados
+    cout << "Lista de Passageiros cadastrados:" << endl;
+    listarPassageiros();
+    cout << "Digite o bilhete do passageiro que deseja embarcar: ";
     cin >> bilhetePassageiro;
 
     Passageiro tmp;
@@ -297,28 +399,6 @@ void Sistema::embarcarPassageiro() {
 
 }
 
-// Função para listar todos os voos cadastrados
-void Sistema::listarVoos() {
-    limparTela();
-    cout << "Lista de Voos" << endl;
-
-    for (const auto& voo : voos) {
-        if (voo) {
-            cout << "Código: " << voo->getCod()
-                 << ", Origem: " << voo->getOrigem()
-                 << ", Destino: " << voo->getDestino()
-                 << ", Distância: " << voo->getDistancia()
-                 << ", Lotação: " << voo->getLotacao()
-                 << ", Aeronave: " << voo->getAeronave()->getCodigo()
-                 << ", Comandante: " << voo->getComandante()->getNome()
-                 << ", Copiloto: " << voo->getCopiloto()->getNome()
-                 << endl;
-        }
-    }
-    system("pause");
-
-}
-
 // Função para listar todos os passageiros de um voo
 void Sistema::listarPassageirosDeVoo() {
     limparTela();
@@ -328,7 +408,7 @@ void Sistema::listarPassageirosDeVoo() {
 
     limparTela();
     cout << "Lista de Passageiros do Voo " << codigoVoo << endl;
-
+    // Verifica se o voo existe
     Voo* voo = nullptr;
     for (const auto& v : voos) {
         if (v->getCod() == codigoVoo) {
@@ -337,12 +417,13 @@ void Sistema::listarPassageirosDeVoo() {
         }
     }
 
+    // Se o voo não for encontrado, exibe mensagem de erro
     if (!voo) {
         cout << "Voo não encontrado." << endl;
         system("pause");
         return;
     }
-
+    // Se o voo não tiver passageiros, exibe mensagem de aviso
     const auto& passageiros = voo->getPassageiros();
     if (passageiros.empty()) {
         cout << "Nenhum passageiro embarcado neste voo." << endl;
@@ -508,3 +589,67 @@ void Sistema::gerarRelatorios() {
     } while (opcao != 7);
 }
 
+void Sistema::listarAeronaves() {
+    cout << "Lista de Aeronaves" << endl;
+
+    for (const auto& aeronave : aeronaves) {
+        if (aeronave) {
+            cout << "Código: " << aeronave->getCodigo()
+                 << ", Modelo: " << aeronave->getModelo()
+                 << ", Capacidade: " << aeronave->getCapacidade()
+                 << ", Velocidade Média: " << aeronave->getVelocidadeMedia()
+                 << ", Autonomia: " << aeronave->getAutonomia()
+                 << endl;
+        }
+    }
+}
+
+void Sistema::listarPilotos() {
+    cout << "Lista de Pilotos" << endl;
+    int contador = 0;
+    for (const auto& piloto : pilot) {
+        if (piloto) {
+            cout << "Piloto " << ++contador << ": "
+                 << ", Matricula: " << piloto->getMatricula()
+                 << ", Nome: " << piloto->getNome()
+                 << ", CPF: " << piloto->getCpf()
+                 << ", Breve: " << piloto->getBreve()
+                 << ", Horas de Voo: " << piloto->getHorasdevoo()
+                 << endl;
+        }
+    }
+}
+
+void Sistema::listarPassageiros() {
+    cout << "Lista de Passageiros" << endl;
+    int contador = 0;
+    for (const auto& passageiro : passag) {
+        if (passageiro) {
+            cout << "Passageiro " << ++contador << ": "
+                 << ", Bilhete: " << passageiro->getNumbilhete()
+                 << ", Nome: " << passageiro->getNome()
+                 << ", CPF: " << passageiro->getCpf()
+                 << ", Número de Voos: " << passageiro->getNumvoo()
+                 << endl;
+        }
+    }
+}
+
+void Sistema::listarVoos() {
+    cout << "Lista de Voos" << endl;
+    int contador = 0;
+    for (const auto& voo : voos) {
+        if (voo) {
+            cout << "Voo " << ++contador << ": "
+                 << ", Código: " << voo->getCod()
+                 << ", Origem: " << voo->getOrigem()
+                 << ", Destino: " << voo->getDestino()
+                 << ", Distância: " << voo->getDistancia()
+                 << ", Lotação: " << voo->getLotacao()
+                 << ", Aeronave: " << voo->getAeronave()->getCodigo()
+                 << ", Comandante: " << voo->getComandante()->getNome()
+                 << ", Copiloto: " << voo->getCopiloto()->getNome()
+                 << endl;
+        }
+    }
+}
