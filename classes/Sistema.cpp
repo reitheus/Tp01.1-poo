@@ -480,7 +480,6 @@ void Sistema::executarOpcao(int op){
             break;
         case 7: {
             listarPassageirosDeVoo();
-            system("pause");
             break;
         }
         case 8:
