@@ -102,6 +102,7 @@ vector<Passageiro*> Passageiro::carregarPassageirosCSV(string caminho) {
             int numVoo = stoi(partes[3]);
 
             passageiros.push_back(new Passageiro(nome, cpf, bilhete, numVoo));
+            cout << "Passageiro carregado: " << nome << endl;
         }
     }
 
