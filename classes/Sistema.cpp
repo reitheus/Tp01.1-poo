@@ -403,8 +403,24 @@ void Sistema::embarcarPassageiro() {
 void Sistema::listarPassageirosDeVoo() {
     limparTela();
     int codigoVoo;
+    cout << "Listagem de Passageiros por Voo" << endl;
+    // Verifica se há voos cadastrados
+    if (voos.empty()) {
+        cout << "Nenhum voo cadastrado." << endl;
+        system("pause");
+        return;
+    }
+    // Solicita o código do voo
+    cout << "Lista de voos disponíveis:" << endl;
+    listarVoos();
     cout << "Digite o código do voo: ";
     cin >> codigoVoo;
+    // Verifica se o código do voo é válido
+    if (codigoVoo <= 0 || cin.fail()) {
+        cout << "Código inválido. Deve ser um número positivo." << endl;
+        system("pause");
+        return;
+    }
 
     limparTela();
     cout << "Lista de Passageiros do Voo " << codigoVoo << endl;
@@ -460,9 +476,11 @@ void Sistema::executarOpcao(int op){
             break;
         case 6:
             listarVoos();
+            system("pause");
             break;
         case 7: {
             listarPassageirosDeVoo();
+            system("pause");
             break;
         }
         case 8:
