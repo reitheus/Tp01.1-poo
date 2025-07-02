@@ -15,6 +15,8 @@ Este projeto implementa um sistema simples de gerenciamento de aeroporto utiliza
   - `Pessoa.cpp`
   - `Piloto.cpp`
   - `Voo.cpp`
+  - `Sistema.cpp`
+  - `Persistencia.cpp`
 - `Makefile` — (não testado)
 
 ## Como compilar
@@ -22,13 +24,13 @@ Este projeto implementa um sistema simples de gerenciamento de aeroporto utiliza
 Recomenda-se compilar usando o `g++`:
 
 ```sh
-g++ -c -Wall ./classes/Aeronave.cpp ./classes/Horario.cpp ./classes/Passageiro.cpp ./classes/Pessoa.cpp ./classes/Piloto.cpp ./classes/Voo.cpp
+g++ -c -Wall ./classes/Aeronave.cpp ./classes/Horario.cpp ./classes/Passageiro.cpp ./classes/Pessoa.cpp ./classes/Piloto.cpp ./classes/Voo.cpp ./classes/Sistema.cpp ./classes/Persistencia.cpp
 ```
 
 Ou, se preferir usar o `gcc`:
 
 ```sh
-gcc -c -Wall ./classes/Aeronave.cpp ./classes/Horario.cpp ./classes/Passageiro.cpp ./classes/Pessoa.cpp ./classes/Piloto.cpp ./classes/Voo.cpp
+gcc -c -Wall ./classes/Aeronave.cpp ./classes/Horario.cpp ./classes/Passageiro.cpp ./classes/Pessoa.cpp ./classes/Piloto.cpp ./classes/Voo.cpp ./classes/Sistema.cpp ./classes/Persistencia.cpp
 ```
 
 > **Nota:** O Makefile está presente no projeto, mas não foi testado. Caso tenha problemas na compilação, prefira usar os comandos acima manualmente.
