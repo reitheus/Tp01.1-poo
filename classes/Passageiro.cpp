@@ -29,7 +29,7 @@ int Passageiro::getNumvoo() const{
 
 string Passageiro::serializar() const {
 
-    return getNome() + "," + to_string(getCpf()) + "," + getNumbilhete() + "," + to_string(getNumvoo()) + "," + "Passageiro";
+    return getNome() + "," + to_string(getCpf()) + "," + getNumbilhete() + "," + to_string(getNumvoo());
 }
 
 void Passageiro::salvarPassageirosCSV(vector<Passageiro*> passageiros, string caminho) {
@@ -49,7 +49,7 @@ void Passageiro::salvarPassageirosCSV(vector<Passageiro*> passageiros, string ca
             for (size_t i = 0; i < linhas.size(); ++i) {
                 auto partes = split(linhas[i], ',');
                 // Verifica se é Passageiro e compara pelo número do bilhete
-                if (partes.size() >= 5 && partes[4] == "Passageiro" && partes[0] == p->getNumbilhete()) {
+                if (partes.size() >= 4 && partes[0] == p->getNumbilhete()) {
                     linhas[i] = p->serializar();
                     existe = true;
                     break;
@@ -95,7 +95,7 @@ vector<Passageiro*> Passageiro::carregarPassageirosCSV(string caminho) {
     while (getline(arquivo, linha)) {
         auto partes = split(linha, ',');
 
-        if (partes[4] == "Passageiro") {
+        if (partes.size() >= 4) {  // Verifica se há pelo menos 4 campos
             string nome = partes[0];
             long long cpf = stoll(partes[1]);
             string bilhete = partes[2];

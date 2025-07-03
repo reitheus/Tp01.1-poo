@@ -1,0 +1,18 @@
+Total de voos: 3
+Média de passageiros por voo: 1.66667
+Aeronave mais utilizada: Airbus A320
+Passageiro mais frequente: Julia Mendes
+Voos com 90% ou mais de ocupação: 
+Distância total por aeronave: 
+ - Airbus A320: 5500 km
+ - Boeing 737: 1500 km
+Total de voos: 4
+Média de passageiros por voo: 1.75
+Aeronave mais utilizada: Airbus A320
+Passageiro mais frequente: Julia Mendes
+Voos com 90% ou mais de ocupação: 
+ - 505
+Distância total por aeronave: 
+ - Airbus A320: 5500 km
+ - Boeing 737: 1500 km
+ - Qatar 951: 3600 km

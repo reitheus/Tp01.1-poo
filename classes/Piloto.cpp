@@ -38,7 +38,7 @@ int Piloto::getHorasdevoo() const {
 }
 
 string Piloto::serializar() const {
-    return getNome() + "," + to_string(getCpf()) + "," + to_string(matricula) + "," + breve + "," + to_string(horasdevoo) + "," + "Piloto";
+    return getNome() + "," + to_string(getCpf()) + "," + to_string(matricula) + "," + breve + "," + to_string(horasdevoo);
 }
 
 vector<Piloto*> Piloto::carregarPilotosCSV(const string& caminho) {
@@ -49,7 +49,7 @@ vector<Piloto*> Piloto::carregarPilotosCSV(const string& caminho) {
     while (getline(arquivo, linha)) {
         auto partes = split(linha, ',');
 
-        if (partes.size() >= 5 && partes[5] == "Piloto") {
+        if (partes.size() >= 5) {
             string nome = partes[0];
             long long cpf = stoll(partes[1]);
             int matricula = stoi(partes[2]);
@@ -82,7 +82,7 @@ void Piloto::salvarPilotosCSV(const vector<Piloto*>& pilotos, const string& cami
             for (size_t i = 0; i < linhas.size(); ++i) {
                 auto partes = split(linhas[i], ',');
                 // Verifica se é Piloto e compara pela matrícula
-                if (partes.size() >= 6 && partes[5] == "Piloto" && partes[2] == to_string(p->getMatricula())) {
+                if (partes.size() >= 5 && partes[2] == to_string(p->getMatricula())) {
                     linhas[i] = p->serializar();
                     existe = true;
                     break;
@@ -100,7 +100,7 @@ void Piloto::salvarPilotosCSV(const vector<Piloto*>& pilotos, const string& cami
     for (auto it = linhas.rbegin(); it != linhas.rend(); ++it) {
         auto partes = split(*it, ',');
         if (partes.size() >= 3) {
-            if (matriculasUnicas.find(partes[2]) == matriculasUnicas.end() && partes[5] == "Piloto") {
+            if (matriculasUnicas.find(partes[2]) == matriculasUnicas.end()) {
                 linhasFiltradas.push_back(*it);
                 matriculasUnicas.insert(partes[2]);
             }

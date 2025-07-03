@@ -453,7 +453,11 @@ void Sistema::listarPassageirosDeVoo() {
              << ", CPF: " << p->getCpf() 
              << endl;
     }
-    system("pause");
+    // system("pause");
+     // Adicionar esta parte para esperar o usuário
+    cout << "\nPressione Enter para voltar ao menu...\n";
+    cin.ignore();  // Limpa qualquer entrada anterior
+    cin.get();     // Espera o Enter
 }
 
 // Executa a opção escolhida pelo usuário no menu principal
@@ -475,8 +479,12 @@ void Sistema::executarOpcao(int op){
             embarcarPassageiro();
             break;
         case 6:
+            limparTela();
             listarVoos();
-            system("pause");
+            // system("pause");
+            cout << "\nPressione Enter para voltar ao menu...\n";
+            cin.ignore();  // Limpa qualquer entrada anterior
+            cin.get();     // Espera o Enter
             break;
         case 7: {
             listarPassageirosDeVoo();
@@ -495,25 +503,22 @@ void Sistema::executarOpcao(int op){
 
 }
 
-// Função para salvar os dados dos pilotos e passageiros em arquivo
-void Sistema::salvarEmArquivo(string nomeArquivo, vector<Piloto*> pilotos,vector<Passageiro*> passageiros) {
-    Piloto tmp;
-    Passageiro tmp1;
-    tmp.salvarPilotosCSV(pilotos, nomeArquivo);
-    tmp1.salvarPassageirosCSV(passageiros, nomeArquivo);
-
-}
-
 // Função para salvar todos os dados do sistema em arquivos
 void Sistema::salvarDados() {
     // Salvar dados em arquivos CSV
     Aeronave tmp;
     Voo tmp1;
+    Piloto tmpPiloto;
+    Passageiro tmpPassageiro;
+
     limparTela();
     cout << "Salvando dados..." << endl;
-    salvarEmArquivo("pessoas.csv", pilot, passag);
-    tmp.salvarAeronavesCSV(aeronaves, "aeronaves.csv");
+
+    tmp.salvarAeronavesCSV(aeronaves, "aeronaves.csv");    
+    tmpPiloto.salvarPilotosCSV(pilot, "pilotos.csv");  // Novo arquivo
+    tmpPassageiro.salvarPassageirosCSV(passag, "passageiros.csv");  // Novo arquivo
     tmp1.salvarVoosCSV(voos, "voos.csv");
+
     cout << "Dados salvos com sucesso!" << endl;
 }
 
@@ -523,7 +528,8 @@ void Sistema::carregarDados() {
     cout << "Carregando dados..." << endl;
     // Carregar dados de arquivos CSV
     ifstream arquivoAeronaves("aeronaves.csv", ios::in | ios::app);
-    ifstream arquivoPessoas("pessoas.csv", ios::in | ios::app);
+    ifstream arquivoPilotos("pilotos.csv", ios::in | ios::app);
+    ifstream arquivoPassageiros("passageiros.csv", ios::in | ios::app);
     ifstream arquivoVoos("voos.csv", ios::in | ios::app);
     Aeronave tmp;
     Piloto tmp1;
@@ -537,13 +543,13 @@ void Sistema::carregarDados() {
     } else {
         cout << "Aeronaves carregadas com sucesso!" << endl;
     }
-    pilot = tmp1.carregarPilotosCSV("pessoas.csv");
+    pilot = tmp1.carregarPilotosCSV("pilotos.csv");
     if (pilot.empty()) {
         cout << "Nenhum piloto encontrado no arquivo." << endl;
     } else {
         cout << "Pilotos carregados com sucesso!" << endl;
     }
-    passag = tmp2.carregarPassageirosCSV("pessoas.csv");
+    passag = tmp2.carregarPassageirosCSV("passageiros.csv");
     if (passag.empty()) {
         cout << "Nenhum passageiro encontrado no arquivo." << endl;
     } else {
@@ -555,7 +561,8 @@ void Sistema::carregarDados() {
     } else {
         cout << "Voos carregados com sucesso!" << endl;
     }
-    arquivoPessoas.close();
+    arquivoPilotos.close();
+    arquivoPassageiros.close();
     arquivoVoos.close();
     arquivoAeronaves.close();
     cout << "Dados carregados com sucesso!" << endl;
@@ -597,9 +604,58 @@ void Sistema::gerarRelatorios() {
             case 6:
                 relatorios.relatorioDistanciaPorAeronave(voos);
                 break;
-            case 7:
+            case 7: {
+                // Coleta estatísticas
+                int totalVoos = voos.size();
+
+                // Média de passageiros
+                int somaPassageiros = 0;
+                for (auto& v : voos)
+                    somaPassageiros += v->getPassageiros().size();
+                float mediaPassageiros = (totalVoos > 0) ? (float)somaPassageiros / totalVoos : 0;
+
+                // Aeronave mais usada
+                Aeronave* aeronaveMaisUsada = nullptr;
+                map<Aeronave*, int> uso;
+                for (auto& v : voos) uso[v->getAeronave()]++;
+                if (!uso.empty()) {
+                    aeronaveMaisUsada = max_element(uso.begin(), uso.end(),
+                        [](auto& a, auto& b) { return a.second < b.second; })->first;
+                }
+
+                // Passageiro mais frequente
+                Passageiro* passageiroFrequente = nullptr;
+                map<Passageiro*, int> freq;
+                for (auto& v : voos)
+                    for (auto& p : v->getPassageiros())
+                        freq[p]++;
+                if (!freq.empty()) {
+                    passageiroFrequente = max_element(freq.begin(), freq.end(),
+                        [](auto& a, auto& b) { return a.second < b.second; })->first;
+                }
+
+                // Voos com 90% ou mais de ocupação
+                vector<Voo*> voos90;
+                for (auto& v : voos) {
+                    float taxa = (v->getAeronave()->getCapacidade() == 0) ? 0 :
+                                ((float)v->getLotacao() / v->getAeronave()->getCapacidade()) * 100;
+                    if (taxa >= 90.0f)
+                        voos90.push_back(v);
+                }
+
+                // Distância por aeronave
+                map<Aeronave*, float> distancias;
+                for (auto& v : voos)
+                    distancias[v->getAeronave()] += v->getDistancia();
+
+                vector<pair<Aeronave*, float>> distVector(distancias.begin(), distancias.end());
+
+                // Cria objeto preenchido
+                Relatorios relatorios(totalVoos, mediaPassageiros, aeronaveMaisUsada,
+                            passageiroFrequente, voos90, distVector);
                 relatorios.salvarDadosEstatisticas();
                 break;
+            }
             default:
                 cout << "Opção inválida." << endl;
         }
@@ -669,4 +725,9 @@ void Sistema::listarVoos() {
                  << endl;
         }
     }
+
+     // Adicionar esta parte para esperar o usuário
+    // cout << "\nPressione Enter para continuar...";
+    // cin.ignore();  // Limpa qualquer entrada anterior
+    // cin.get();     // Espera o Enter
 }
