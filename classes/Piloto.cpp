@@ -1,5 +1,6 @@
 #include "../src/Piloto.h"
 
+// Construtor da classe Piloto
 Piloto::Piloto(string nome, long long cpf,int mat, string breve,int tempo){
     matricula = mat;
     this->breve = breve;
@@ -8,10 +9,12 @@ Piloto::Piloto(string nome, long long cpf,int mat, string breve,int tempo){
     setCpf(cpf);
 }
 
+// Destrutor
 Piloto::~Piloto() {
     // Destrutor vazio, pois não há alocação dinâmica de recursos adicionais
 }
 
+// Métodos de acesso (setters e getters)
 void Piloto::setMatricula(int mat){
     matricula = mat;
 }
@@ -37,10 +40,12 @@ int Piloto::getHorasdevoo() const {
     return horasdevoo;
 }
 
+// Método para serializar os dados do piloto em formato CSV
 string Piloto::serializar() const {
-    return getNome() + "," + to_string(getCpf()) + "," + to_string(matricula) + "," + breve + "," + to_string(horasdevoo);
+    return getNome() + "," + to_string(getCpf()) + "," + to_string(matricula) + "," + breve + "," + to_string(horasdevoo) + ",Piloto";
 }
 
+// Método para carregar pilotos de um arquivo CSV   
 vector<Piloto*> Piloto::carregarPilotosCSV(const string& caminho) {
     vector<Piloto*> pilotos;
     ifstream arquivo(caminho);
@@ -49,22 +54,27 @@ vector<Piloto*> Piloto::carregarPilotosCSV(const string& caminho) {
     while (getline(arquivo, linha)) {
         auto partes = split(linha, ',');
 
-        if (partes.size() >= 5) {
-            string nome = partes[0];
-            long long cpf = stoll(partes[1]);
-            int matricula = stoi(partes[2]);
-            string breve = partes[3];
-            int horasdevoo = stof(partes[4]);
+        // Verifica se é um piloto (último campo == "Piloto")
+        if (partes.size() >= 6 && partes.back() == "Piloto") {
+            try {
+                string nome = partes[0];
+                long long cpf = stoll(partes[1]);
+                int matricula = stoi(partes[2]);
+                string breve = partes[3];
+                int horasDeVoo = stoi(partes[4]);
 
-            pilotos.push_back(new Piloto(nome, cpf, matricula, breve, horasdevoo));
-            cout << "Piloto carregado: " << pilotos.back()->getNome() << endl;
+                pilotos.push_back(new Piloto(nome, cpf, matricula, breve, horasDeVoo));
+                cout << "Piloto carregado: " << nome << endl;
+            } catch (const std::exception& e) {
+                cerr << "Erro ao carregar piloto (linha: '" << linha << "'): " << e.what() << endl;
+            }
         }
-
     }
 
     return pilotos;
 }
 
+// Método para salvar pilotos em um arquivo CSV
 void Piloto::salvarPilotosCSV(const vector<Piloto*>& pilotos, const string& caminho) {
     // Ler todas as linhas existentes
     ifstream arquivoLeitura(caminho);
@@ -82,7 +92,7 @@ void Piloto::salvarPilotosCSV(const vector<Piloto*>& pilotos, const string& cami
             for (size_t i = 0; i < linhas.size(); ++i) {
                 auto partes = split(linhas[i], ',');
                 // Verifica se é Piloto e compara pela matrícula
-                if (partes.size() >= 5 && partes[2] == to_string(p->getMatricula())) {
+                if (partes.size() >= 6 && partes[5] == "Piloto" && partes[2] == to_string(p->getMatricula())) {
                     linhas[i] = p->serializar();
                     existe = true;
                     break;
@@ -100,7 +110,7 @@ void Piloto::salvarPilotosCSV(const vector<Piloto*>& pilotos, const string& cami
     for (auto it = linhas.rbegin(); it != linhas.rend(); ++it) {
         auto partes = split(*it, ',');
         if (partes.size() >= 3) {
-            if (matriculasUnicas.find(partes[2]) == matriculasUnicas.end()) {
+            if (matriculasUnicas.find(partes[2]) == matriculasUnicas.end() && partes[5] == "Piloto") {
                 linhasFiltradas.push_back(*it);
                 matriculasUnicas.insert(partes[2]);
             }
@@ -120,6 +130,7 @@ void Piloto::salvarPilotosCSV(const vector<Piloto*>& pilotos, const string& cami
     arquivoEscrita.close();
 }
 
+// Método para encontrar um piloto pelo número de matrícula
 Piloto* Piloto::encontrarPilotoPorMatricula(const vector<Piloto*> pilotos, const int matricula) {
     for (const auto& piloto : pilotos) {
         if (piloto->getMatricula() == matricula) {

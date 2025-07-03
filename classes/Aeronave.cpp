@@ -1,5 +1,6 @@
 #include "../src/Aeronave.h"
 
+//Construtor da classe Aeronave
 Aeronave::Aeronave(string codigo,string modelo,int cap,float velocidade,float autonomia){
     this->codigo = codigo;
     this->modelo = modelo;
@@ -8,10 +9,12 @@ Aeronave::Aeronave(string codigo,string modelo,int cap,float velocidade,float au
     this->autonomia = autonomia;
 }
 
+// Destrutor 
 Aeronave::~Aeronave() {
     // Destrutor vazio, pois não há alocação dinâmica de recursos adicionais
 }
 
+// Método para salvar aeronaves em um arquivo CSV
 void Aeronave::salvarAeronavesCSV(const vector<Aeronave*>& aeronaves, const string& caminho) {
     ofstream arquivo(caminho, ios::out | ios::trunc); // Abre o arquivo em modo truncar
     if (!arquivo.is_open()) {
@@ -26,6 +29,7 @@ void Aeronave::salvarAeronavesCSV(const vector<Aeronave*>& aeronaves, const stri
     arquivo.close();
 }
 
+// Método para carregar aeronaves de um arquivo CSV
 vector<Aeronave*> Aeronave::carregarAeronavesCSV(const string& caminho) {
     vector<Aeronave*> aeronaves;
     ifstream arquivo(caminho);
@@ -54,11 +58,13 @@ vector<Aeronave*> Aeronave::carregarAeronavesCSV(const string& caminho) {
     return aeronaves;
 }
 
+// Método para serializar os dados da aeronave em formato CSV
 string Aeronave::serializar() const {
     return codigo + "," + modelo + "," + to_string(capacidade) + "," +
            to_string(velocidadeMedia) + "," + to_string(autonomia);
 }
 
+// Método para encontrar uma aeronave pelo código
 Aeronave* Aeronave::encontrarAeronavePorCodigo(const vector<Aeronave*> aeronaves, const string& codigo) {
     for (auto* a : aeronaves) {
         if (a->getCodigo().compare(codigo)==0) {
@@ -69,6 +75,7 @@ Aeronave* Aeronave::encontrarAeronavePorCodigo(const vector<Aeronave*> aeronaves
     return nullptr; // Retorna nullptr se não encontrar
 }
 
+// Métodos de acesso (getters e setters)
 void Aeronave::setCodigo(string cod){
     codigo = cod;
 }

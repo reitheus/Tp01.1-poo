@@ -1,5 +1,6 @@
 #include "../src/Voo.h"
 
+// Construtor da classe Voo
 Voo::Voo(int cod, string orig, string dest, float dist, int lotacao, Aeronave* aeronave, Horario* hora,int escala, Piloto* piloto, Piloto* copiloto){
     codigo = cod;
     origem = orig;
@@ -13,10 +14,12 @@ Voo::Voo(int cod, string orig, string dest, float dist, int lotacao, Aeronave* a
     this->copiloto = copiloto;
 }
 
+// Destrutor
 Voo::~Voo(){
 
 }
 
+// Métodos de acesso (setters e getters)
 void Voo::setCod(int num){
     codigo = num;
 }
@@ -81,6 +84,7 @@ vector<Passageiro* > Voo::getPassageiros() const {
     return passageiros;
 }
 
+// Método para adicionar um passageiro ao voo
 void Voo::adicionarPassageiro(Passageiro* passageiro) {
     if (passageiro) {
         passageiros.push_back(passageiro);
@@ -90,6 +94,7 @@ void Voo::adicionarPassageiro(Passageiro* passageiro) {
     }
 }
 
+// Método para salvar voos em um arquivo CSV
 void Voo::salvarVoosCSV(const vector<Voo*>& voos, const string& caminho) {
     ofstream arquivo(caminho);
     if (!arquivo.is_open()) {
@@ -106,6 +111,7 @@ void Voo::salvarVoosCSV(const vector<Voo*>& voos, const string& caminho) {
     arquivo.close();
 }
 
+// Método para carregar voos de um arquivo CSV
 vector<Voo* > Voo::carregarVoosCSV(const string& caminho,const vector<Aeronave* >& aeronaves, const vector<Piloto* >& pilotos, vector<Passageiro* >& passageiros) {
 
     vector<Voo*> voos;
@@ -113,9 +119,11 @@ vector<Voo* > Voo::carregarVoosCSV(const string& caminho,const vector<Aeronave* 
     string linha;
     Aeronave tmp;
 
+    // Verifica se o arquivo foi aberto corretamente
     while (getline(arquivo, linha)) {
         auto partes = split(linha, ',');
 
+        // Verifica se a linha tem o número mínimo de partes
         if (partes.size() >= 11) {
             int codigoVoo = stoi(partes[0]);
             string orig = partes[1];
@@ -131,7 +139,6 @@ vector<Voo* > Voo::carregarVoosCSV(const string& caminho,const vector<Aeronave* 
 
             Aeronave* aeronave = tmp.encontrarAeronavePorCodigo(aeronaves, codigoAeronave);
 
-            // NOVO: Buscar por matrícula, não por nome
             Piloto* piloto = nullptr;
             Piloto* piloto2 = nullptr;
 
@@ -146,6 +153,7 @@ vector<Voo* > Voo::carregarVoosCSV(const string& caminho,const vector<Aeronave* 
             
             Voo* voo = new Voo(codigoVoo, orig, dest, dist,lot ,aeronave, tempoAeronave, escalas, piloto, piloto2);
 
+            // Adiciona os passageiros ao voo
             for(size_t i = 11; i < partes.size(); ++i) {
                 string bilhete = partes[i];
                 Passageiro* passa = nullptr;
@@ -160,7 +168,6 @@ vector<Voo* > Voo::carregarVoosCSV(const string& caminho,const vector<Aeronave* 
                 }
             }
 
-
             voos.push_back(voo);
         }
     }
@@ -168,6 +175,7 @@ vector<Voo* > Voo::carregarVoosCSV(const string& caminho,const vector<Aeronave* 
     return voos;
 }
 
+// Método para serializar os dados do voo em formato CSV
 string Voo::serializar() const {
     stringstream ss;
     ss << to_string(codigo) << "," 

@@ -503,22 +503,25 @@ void Sistema::executarOpcao(int op){
 
 }
 
+// Função para salvar os dados dos pilotos e passageiros em arquivo
+void Sistema::salvarEmArquivo(string nomeArquivo, vector<Piloto*> pilotos,vector<Passageiro*> passageiros) {
+    Piloto tmp;
+    Passageiro tmp1;
+    tmp.salvarPilotosCSV(pilotos, nomeArquivo);
+    tmp1.salvarPassageirosCSV(passageiros, nomeArquivo);
+
+}
+
 // Função para salvar todos os dados do sistema em arquivos
 void Sistema::salvarDados() {
     // Salvar dados em arquivos CSV
     Aeronave tmp;
     Voo tmp1;
-    Piloto tmpPiloto;
-    Passageiro tmpPassageiro;
-
     limparTela();
     cout << "Salvando dados..." << endl;
-
-    tmp.salvarAeronavesCSV(aeronaves, "aeronaves.csv");    
-    tmpPiloto.salvarPilotosCSV(pilot, "pilotos.csv");  // Novo arquivo
-    tmpPassageiro.salvarPassageirosCSV(passag, "passageiros.csv");  // Novo arquivo
+    salvarEmArquivo("pessoas.csv", pilot, passag);
+    tmp.salvarAeronavesCSV(aeronaves, "aeronaves.csv");
     tmp1.salvarVoosCSV(voos, "voos.csv");
-
     cout << "Dados salvos com sucesso!" << endl;
 }
 
@@ -528,8 +531,7 @@ void Sistema::carregarDados() {
     cout << "Carregando dados..." << endl;
     // Carregar dados de arquivos CSV
     ifstream arquivoAeronaves("aeronaves.csv", ios::in | ios::app);
-    ifstream arquivoPilotos("pilotos.csv", ios::in | ios::app);
-    ifstream arquivoPassageiros("passageiros.csv", ios::in | ios::app);
+    ifstream arquivoPessoas("pessoas.csv", ios::in | ios::app);
     ifstream arquivoVoos("voos.csv", ios::in | ios::app);
     Aeronave tmp;
     Piloto tmp1;
@@ -543,13 +545,13 @@ void Sistema::carregarDados() {
     } else {
         cout << "Aeronaves carregadas com sucesso!" << endl;
     }
-    pilot = tmp1.carregarPilotosCSV("pilotos.csv");
+    pilot = tmp1.carregarPilotosCSV("pessoas.csv");
     if (pilot.empty()) {
         cout << "Nenhum piloto encontrado no arquivo." << endl;
     } else {
         cout << "Pilotos carregados com sucesso!" << endl;
     }
-    passag = tmp2.carregarPassageirosCSV("passageiros.csv");
+    passag = tmp2.carregarPassageirosCSV("pessoas.csv");
     if (passag.empty()) {
         cout << "Nenhum passageiro encontrado no arquivo." << endl;
     } else {
@@ -561,8 +563,7 @@ void Sistema::carregarDados() {
     } else {
         cout << "Voos carregados com sucesso!" << endl;
     }
-    arquivoPilotos.close();
-    arquivoPassageiros.close();
+    arquivoPessoas.close();
     arquivoVoos.close();
     arquivoAeronaves.close();
     cout << "Dados carregados com sucesso!" << endl;
@@ -725,9 +726,4 @@ void Sistema::listarVoos() {
                  << endl;
         }
     }
-
-     // Adicionar esta parte para esperar o usuário
-    // cout << "\nPressione Enter para continuar...";
-    // cin.ignore();  // Limpa qualquer entrada anterior
-    // cin.get();     // Espera o Enter
 }

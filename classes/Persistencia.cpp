@@ -1,8 +1,7 @@
 #include "../src/Persistencia.h"
 
-
+// Função para limpar a tela do console
 void limparTela() {
-    // Limpa a tela do console
     #ifdef _WIN32
         system("cls");
     #else
@@ -10,6 +9,7 @@ void limparTela() {
     #endif
 }
 
+// Função para dividir uma string em partes usando um delimitador
 vector<string> split(const string& s, char delimiter) {
     vector<string> tokens;
     string token;
