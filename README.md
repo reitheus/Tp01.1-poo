@@ -17,7 +17,7 @@ Este projeto implementa um sistema simples de gerenciamento de aeroporto utiliza
   - `Voo.cpp`
   - `Sistema.cpp`
   - `Persistencia.cpp`
-- `Makefile` — (não testado)
+- `Makefile`
 
 ## Como compilar
 
