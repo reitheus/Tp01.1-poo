@@ -30,6 +30,12 @@ make
 ./programa
 ```
 
+> Para limpar os arquivos gerados pela compilação (como o executável `programa` e a pasta `obj`), use:
+
+```sh
+make clean
+```
+
 Ou, se preferir compilar usando o `g++`:
 
 ```sh
